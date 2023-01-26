@@ -3,7 +3,7 @@ import tempfile
 import vtk
 from vtk.util.keys import StringKey
 from vtk.vtkCommonCore import vtkInformationIterator
-import vtkU3DExporter
+from vtk import vtkU3DExporter
 
 
 def write_u3d(file_path, actors):
