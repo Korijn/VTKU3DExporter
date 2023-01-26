@@ -10,8 +10,8 @@ endif()
 
 FetchContent_Populate(${proj}
   SOURCE_DIR     ${EP_SOURCE_DIR}
-  GIT_REPOSITORY https://github.com/KitwareMedical/VTKExternalModule.git
-  GIT_TAG        10d08094ac60bedd8a8cc092c67c8816022126ed
+  GIT_REPOSITORY https://github.com/jcfr/VTKExternalModule.git
+  GIT_TAG        d6445b187e1b07e7e902810920b954f9cc2cf727
   QUIET
   )
 
