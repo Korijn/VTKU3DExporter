@@ -31,6 +31,12 @@ vtk_module_link(VTK::U3DExporter
   PUBLIC
     U3D::IDTF
   )
+if(WIN32)
+  vtk_module_link(VTK::U3DExporter
+    PRIVATE
+      winmm # For timeGetTime/timeBeginPeriod/timeEndPeriod
+    )
+endif()
 
 if(VTK_WHEEL_BUILD AND UNIX)
   install(
