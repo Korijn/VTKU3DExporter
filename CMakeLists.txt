@@ -31,3 +31,9 @@ vtk_module_link(VTK::U3DExporter
   PUBLIC
     U3D::IDTF
   )
+
+if(VTK_WHEEL_BUILD AND UNIX)
+  install(
+    FILES "${U3D_IDTF_LIBRARY}"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/vtkmodules")
+endif()
