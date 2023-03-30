@@ -263,6 +263,7 @@ void vtkU3DExporter::WriteData()
         vtkErrorMacro(<< "Please specify FileName to use");
         return;
     }
+    vtkDebugMacro(<< "FileName: " << this->FileName);
 
     // Let's assume the first renderer is the right one
     // first make sure there is only one renderer in this rendering window
@@ -299,7 +300,10 @@ void vtkU3DExporter::WriteData()
     }
 
     if( !IFXSUCCESS(result) )
+    {
+        vtkErrorMacro(<< "IFXCOMInitialize failed. Result is " << result);
         return;
+    }
 
     {
         ConverterOptions converterOptions;
