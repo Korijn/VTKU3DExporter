@@ -17,6 +17,10 @@ def write_u3d(file_path, actors):
 
     renderer.ResetCamera()
 
+    # Workaround current limitation of IFXOSLoader.cpp. This is required
+    # to ensure the IFXCore library can be loaded.
+    os.environ["U3D_LIBDIR"] = os.path.dirname(vtkU3DExporter.__file__)
+
     u3d_exporter = vtkU3DExporter.vtkU3DExporter()
     u3d_exporter.SetFileName(file_path)
     u3d_exporter.SetInput(render_window)
