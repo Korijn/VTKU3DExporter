@@ -93,6 +93,9 @@ if __name__ == "__main__":
         print("Removing old file...")
         os.remove("{}.u3d".format(file_path))
 
+    log_file_path = "{}.u3d.DebugInfo.txt".format(file_path)
+    print("Log file is {}".format(log_file_path))
+
     # Write the u3d file to the file path
     print("Writing file to {}.u3d".format(file_path))
     write_u3d(file_path, [cubeActor, stlActor])
@@ -103,7 +106,7 @@ if __name__ == "__main__":
         raise Exception("Failed to create the U3D file")
 
     print("Testing that the mesh is in the logs...")
-    log_content = open("{}.u3d.DebugInfo.txt".format(file_path)).read()
+    log_content = open(log_file_path).read()
     try:
         assert " Mesh2\n" in log_content
     except AssertionError as error:
