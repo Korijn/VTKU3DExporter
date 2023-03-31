@@ -411,7 +411,6 @@ int vtkU3DExporterTest( int argc, char *argv[] )
   // follows.
   //
   iren->Initialize();
-  iren->Start();
   
   // 
   // Final note: recall that an observers can watch for particular events and
@@ -419,6 +418,12 @@ int vtkU3DExporterTest( int argc, char *argv[] )
   // vtkRenderWindowInteractor to invoke a UserEvent. This can be caught to
   // popup a GUI, etc. So the Tcl Cube5.tcl example for an idea of how this
   // works.
+
+  int retVal = vtkRegressionTestImage(renWin);
+  if (retVal == vtkRegressionTester::DO_INTERACTOR)
+  {
+    iren->Start();
+  }
 
   //
   // Free up any objects we created. All instances in VTK are deleted by
@@ -429,7 +434,7 @@ int vtkU3DExporterTest( int argc, char *argv[] )
   iren->Delete();
   style->Delete();
 
-  return 0;
+  return !retVal;
 }
 
 
