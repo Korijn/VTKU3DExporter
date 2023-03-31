@@ -107,7 +107,7 @@ if vtk_wheel_sdk_path is None:
 # Find the cmake dir
 cmake_glob = list(Path(vtk_wheel_sdk_path).glob("**/headers/cmake"))
 if len(cmake_glob) != 1:
-    raise Exception("Unable to find cmake directory")
+    raise Exception(f"Unable to find cmake directory in vtk_wheel_sdk_path [{vtk_wheel_sdk_path}]")
 
 vtk_wheel_sdk_cmake_path = cmake_glob[0]
 
