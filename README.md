@@ -12,13 +12,13 @@ This project is distributed under the Apache license. Please see the [LICENSE][L
 
 First time:
 
-```ps
+```pwsh
 $env:CIBW_TEST_COMMAND = "pip install -r {package}/Testing/Python/requirements.txt && pytest {package}/Testing/Python && python {package}/test.py"
 .venv/Scripts/cibuildwheel --only cp39-win_amd64
 ```
 
 Subsequent builds require clearing the `_skbuild` and `wheelhouse` folders or they will fail:
 
-```ps
+```pwsh
 Remove-Item -Recurse -Force ./_skbuild && Remove-Item -Recurse -Force ./wheelhouse &&
 ```
