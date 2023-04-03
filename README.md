@@ -20,5 +20,5 @@ $env:CIBW_TEST_COMMAND = "pip install -r {package}/Testing/Python/requirements.t
 Subsequent builds require clearing the `_skbuild` and `wheelhouse` folders or they will fail:
 
 ```pwsh
-Remove-Item -Recurse -Force ./_skbuild && Remove-Item -Recurse -Force ./wheelhouse &&
+Remove-Item -Recurse -Force ./_skbuild && Remove-Item -Recurse -Force ./wheelhouse && .venv/Scripts/cibuildwheel --only cp39-win_amd64
 ```
