@@ -3,12 +3,12 @@ name: Build Wheels
 on:
   push:
     branches:
-      - update-to-vtk9
+      - main
     tags:
        - '*'
   pull_request:
     branches:
-      - update-to-vtk9
+      - main
 
   workflow_dispatch:
 
