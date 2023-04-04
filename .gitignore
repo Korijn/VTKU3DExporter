@@ -8,3 +8,5 @@ wheelhouse
 .venv
 __pycache__
 *.egg-info
+pyi
+*.spec

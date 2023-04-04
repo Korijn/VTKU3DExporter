@@ -68,7 +68,7 @@ def get_name_for_actor(actor, keyName="MeshName"):
     return None
 
 
-def test_u3d_generation(tmp_path):
+def test_u3d_generation(tmp_path, stl_path=STL_PATH):
     # Create cube
     cube = vtk.vtkCubeSource()
 
@@ -81,7 +81,7 @@ def test_u3d_generation(tmp_path):
     cubeActor.SetMapper(cubeMapper)
     assert get_name_for_actor(cubeActor) is None
 
-    stlActor = create_actor_from_stl(STL_PATH)
+    stlActor = create_actor_from_stl(stl_path)
     set_name_for_actor("a9p", stlActor)
     assert get_name_for_actor(stlActor) == "a9p"
 
