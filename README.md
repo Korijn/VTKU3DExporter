@@ -34,5 +34,4 @@ First run the build locally as described above.
 .venv/Scripts/pip install wheelhouse/vtk_u3dexporter-xxxxxx-cp39-cp39-win_amd64.whl
 .venv/Scripts/pip install -r Testing/Python/requirements.txt
 .venv/Scripts/pytest Testing/Python
-.venv/Scripts/python test.py
 ```
