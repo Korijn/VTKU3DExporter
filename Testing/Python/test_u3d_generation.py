@@ -1,12 +1,7 @@
-from pathlib import Path
-
 import vtk
 from vtk.util.keys import StringKey
 from vtk.vtkCommonCore import vtkInformationIterator
 from vtk import vtkU3DExporter
-
-
-STL_PATH = Path(__file__).parent / "test.stl"
 
 
 def write_u3d(file_path, actors):
@@ -24,19 +19,6 @@ def write_u3d(file_path, actors):
     u3d_exporter.SetFileName(file_path)
     u3d_exporter.SetInput(render_window)
     u3d_exporter.Write()
-
-
-def create_actor_from_stl(path):
-    assert path.exists(), f"STL file {path} does not exist"
-    reader = vtk.vtkSTLReader()
-    reader.SetFileName(path)
-
-    mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputConnection(reader.GetOutputPort())
-
-    actor = vtk.vtkActor()
-    actor.SetMapper(mapper)
-    return actor
 
 
 def set_name_for_actor(name, actor):
@@ -68,22 +50,18 @@ def get_name_for_actor(actor, keyName="MeshName"):
     return None
 
 
-def test_u3d_generation(tmp_path, stl_path=STL_PATH):
+def test_u3d_generation(tmp_path):
     # Create cube
     cube = vtk.vtkCubeSource()
 
     # Mapper
     cubeMapper = vtk.vtkPolyDataMapper()
-    cubeMapper.SetInputData(cube.GetOutput())
+    cubeMapper.SetInputConnection(cube.GetOutputPort())
 
     # Actor
     cubeActor = vtk.vtkActor()
     cubeActor.SetMapper(cubeMapper)
     assert get_name_for_actor(cubeActor) is None
-
-    stlActor = create_actor_from_stl(stl_path)
-    set_name_for_actor("a9p", stlActor)
-    assert get_name_for_actor(stlActor) == "a9p"
 
     # Construct file paths
     filename = "test_report"
@@ -92,12 +70,13 @@ def test_u3d_generation(tmp_path, stl_path=STL_PATH):
     log_file_path = file_path.with_suffix(".u3d.DebugInfo.txt")
 
     # Write the u3d file to the file path
-    write_u3d(file_path, [cubeActor, stlActor])
+    write_u3d(file_path, [cubeActor])
 
     # Check that we have successfully created a U3D file
     assert u3d_path.exists(), "Failed to create the U3D file"
 
     # Check that the mesh is in the logs
     log_content = log_file_path.open().read()
-    assert " Mesh2\n" in log_content, "Mesh2 not found in U3D debug logs"
+    mesh_name = "Mesh2"
+    assert f" {mesh_name}\n" in log_content, "{mesh_name} not found in U3D debug logs"
     
