@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_all, collect_dynamic_libs
@@ -5,11 +6,12 @@ from PyInstaller.utils.hooks import collect_all, collect_dynamic_libs
 
 # if VTK would provide its own pyinstaller hook,
 # we would want to package only the new files here
-# to do so, flip this boolean flag to True
 # until then, we have to package VTK in its entirety
 # together with VTKU3DExporter's additional files
-# to keep it that way, leave the flag at False
-PACKAGE_VTKU3DEXPORTER_ONLY = False
+# you can control this hook's behaviour at pyinstaller
+# runtime by setting environment variable
+# PACKAGE_VTKU3DEXPORTER_ONLY=1
+PACKAGE_VTKU3DEXPORTER_ONLY = os.environ.get("PACKAGE_VTKU3DEXPORTER_ONLY", "0").strip() == "1"
 
 
 if PACKAGE_VTKU3DEXPORTER_ONLY:
