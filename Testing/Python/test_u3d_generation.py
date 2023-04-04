@@ -1,9 +1,12 @@
-import os
-import tempfile
+from pathlib import Path
+
 import vtk
 from vtk.util.keys import StringKey
 from vtk.vtkCommonCore import vtkInformationIterator
 from vtk import vtkU3DExporter
+
+
+STL_PATH = Path(__file__).parent / "test.stl"
 
 
 def write_u3d(file_path, actors):
@@ -24,7 +27,7 @@ def write_u3d(file_path, actors):
 
 
 def create_actor_from_stl(path):
-    assert os.path.exists(path)
+    assert path.exists(), f"STL file {path} does not exist"
     reader = vtk.vtkSTLReader()
     reader.SetFileName(path)
 
@@ -57,16 +60,15 @@ def get_name_for_actor(actor, keyName="MeshName"):
     iterator = vtkInformationIterator()
     iterator.SetInformation(information)
     iterator.InitTraversal()
-    while (not iterator.IsDoneWithTraversal()):
+    while not iterator.IsDoneWithTraversal():
         key = iterator.GetCurrentKey()
         if key.GetName() == keyName:
             return information.Get(key)
-            break
         iterator.GoToNextItem()
     return None
 
 
-def test_u3d_generation():
+def test_u3d_generation(tmp_path):
     # Create cube
     cube = vtk.vtkCubeSource()
 
@@ -79,38 +81,23 @@ def test_u3d_generation():
     cubeActor.SetMapper(cubeMapper)
     assert get_name_for_actor(cubeActor) is None
 
-    stlPath = os.path.join(os.path.dirname(__file__), "test.stl")
-    stlActor = create_actor_from_stl(stlPath)
+    stlActor = create_actor_from_stl(STL_PATH)
     set_name_for_actor("a9p", stlActor)
     assert get_name_for_actor(stlActor) == "a9p"
 
-    # Get the file_path and delete if it already exists
-    dir_path = tempfile.gettempdir()
+    # Construct file paths
     filename = "test_report"
-    file_path = os.path.join(dir_path, filename)
-
-    if os.path.exists("{}.u3d".format(file_path)):
-        print("Removing old file...")
-        os.remove("{}.u3d".format(file_path))
-
-    log_file_path = "{}.u3d.DebugInfo.txt".format(file_path)
-    print("Log file is {}".format(log_file_path))
+    file_path = tmp_path / filename
+    u3d_path = file_path.with_suffix(".u3d")
+    log_file_path = file_path.with_suffix(".u3d.DebugInfo.txt")
 
     # Write the u3d file to the file path
-    print("Writing file to {}.u3d".format(file_path))
     write_u3d(file_path, [cubeActor, stlActor])
 
-    print("Testing that u3d was generated...")
     # Check that we have successfully created a U3D file
-    if not os.path.exists("{}.u3d".format(file_path)):
-        raise Exception("Failed to create the U3D file")
+    assert u3d_path.exists(), "Failed to create the U3D file"
 
-    print("Testing that the mesh is in the logs...")
-    log_content = open(log_file_path).read()
-    try:
-        assert " Mesh2\n" in log_content
-    except AssertionError as error:
-        print(log_content)
-        raise error
-
-    print("Test successful")
+    # Check that the mesh is in the logs
+    log_content = log_file_path.open().read()
+    assert " Mesh2\n" in log_content, "Mesh2 not found in U3D debug logs"
+    

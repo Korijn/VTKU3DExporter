@@ -49,7 +49,7 @@ env:
 
   CIBW_TEST_COMMAND: >
     pip install -r {package}/Testing/Python/requirements.txt &&
-    pytest {package}/Testing/Python
+    pytest -v {package}/Testing/Python
 
 # Use bash by default for the run command
 defaults:
