@@ -54,8 +54,8 @@ env:
   CIBW_TEST_COMMAND_WINDOWS: >
     pip install -r {package}/Testing/Python/requirements.txt &&
     pytest -v {package}/Testing/Python &&
-    pyinstaller --noconfirm --distpath ./pyi/dist --workpath ./pyi/build --specpath Testing/Python Testing/Python/pyi_test_program.py &&
-    ./pyi/dist/pyi_test_program/pyi_test_program.exe
+    pyinstaller --noconfirm --distpath {package}/pyi/dist --workpath {package}/pyi/build --specpath {package}/Testing/Python {package}/Testing/Python/pyi_test_program.py &&
+    {package}/pyi/dist/pyi_test_program/pyi_test_program.exe
 
 
 # Use bash by default for the run command
