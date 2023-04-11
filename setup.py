@@ -176,12 +176,20 @@ setup(
         "Topic :: Scientific/Engineering :: Medical Science Apps.",
     ],
     keywords="",
-    packages=["vtkmodules"],
-    package_dir={"vtkmodules": "lib/vtkmodules"},
+    packages=["vtkmodules", "vtkmodules.__pyinstaller_vtkU3DExporter"],
+    package_dir={
+        "vtkmodules": "lib/vtkmodules",
+        "vtkmodules.__pyinstaller_vtkU3DExporter": "lib/vtkmodules/__pyinstaller_vtkU3DExporter",
+    },
     cmake_args=cmake_args,
     install_requires=["vtk==9.2.5"],
     project_urls={  # Optional
         "Bug Reports": "https://github.com/ClinicalGraphics/VTKU3DExporter/issues",
         "Source": "https://github.com/ClinicalGraphics/VTKU3DExporter/",
+    },
+    entry_points={
+        "pyinstaller40": [
+            "hook-dirs = vtkmodules.__pyinstaller_vtkU3DExporter:get_hook_dirs",
+        ],
     },
 )

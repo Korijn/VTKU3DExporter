@@ -1,0 +1,17 @@
+# VTKU3DExporter
+_skbuild
+_deps
+vtk-wheel-sdk-build
+vtk-wheel-sdk-subbuild
+vtkexternalmodule-build
+vtkexternalmodule-subbuild
+
+# Python
+wheelhouse
+.venv
+__pycache__
+*.egg-info
+
+# PyInstaller
+pyi
+*.spec
