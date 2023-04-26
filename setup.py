@@ -119,6 +119,32 @@ def auto_download_vtk_external_module():
     return external_module_path.as_posix()
 
 
+def auto_build_vtk_compile_tools():
+    """Automatically download the VTK sources and build the compile tools.
+
+    Returns the path to the VTKCompileTools build direcory.
+    """
+
+    sdk_version = vtk_wheel_sdk_version()
+
+    wheel_sdk_name = vtk_wheel_sdk_name(sdk_version=sdk_version)
+
+    populate_path = Path("..").resolve() / f"{wheel_sdk_name}-deps/VTKCompileTools"
+    compile_tools_path = Path("..").resolve() / f"{wheel_sdk_name}-deps/VTKCompileTools-build"
+
+    script_path = str(vtk_module_source_dir / "BuildVTKCompileTools.cmake")
+
+    cmd = [
+        "cmake",
+        f"-DVTKCompileTools_POPULATE_DIR:PATH={populate_path}",
+        f"-DVTK_WHEEL_SDK_VERSION:STRING={sdk_version}",
+        f"-DVTKCompileTools_DIR:PATH={compile_tools_path}",
+        "-P", script_path,
+    ]
+    subprocess.check_call(cmd)
+    return compile_tools_path.as_posix()
+
+
 vtk_wheel_sdk_path = os.getenv("VTK_WHEEL_SDK_PATH")
 if vtk_wheel_sdk_path is None:
     vtk_wheel_sdk_path = auto_download_vtk_wheel_sdk()
@@ -173,9 +199,14 @@ elif sys.platform == "darwin":
     cmake_args.append("-DVTK_USE_COCOA:BOOL=ON")
 
     if os.getenv("ARCHFLAGS") == "-arch arm64":
+        cmake_args.append("-DCMAKE_CROSSCOMPILING:BOOL=ON")
+
         # We are cross-compiling and need to set CMAKE_SYSTEM_NAME as well.
-        # NOTE: we haven"t actually succeeded in cross-compiling this module.
         cmake_args.append("-DCMAKE_SYSTEM_NAME=Darwin")
+
+        vtk_compile_tools_dir = auto_build_vtk_compile_tools()
+        cmake_args.append(f"-DVTKCompileTools_DIR:PATH={vtk_compile_tools_dir}")
+
 
 long_description = (vtk_module_source_dir / "README.md").read_text(encoding="utf-8")
 
