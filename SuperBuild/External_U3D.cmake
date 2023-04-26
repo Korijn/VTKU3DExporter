@@ -32,6 +32,7 @@ if(NOT DEFINED ${proj}_INCLUDE_DIR OR NOT DEFINED ${proj}_IDTF_LIBRARY)
   set(_install_libdir "${CMAKE_INSTALL_LIBDIR}/vtkmodules")
 
   ExternalProject_add(U3D
+    ${${proj}_EP_ARGS}
     GIT_REPOSITORY https://github.com/ClinicalGraphics/u3d.git
     GIT_TAG a2dc4bf9ead5400939f698d5834b7c5d43dbf42a
     SOURCE_DIR ${EP_SOURCE_DIR}
