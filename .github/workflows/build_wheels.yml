@@ -12,6 +12,10 @@ on:
 
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   # Only support 64-bit CPython >= 3.7
   # VTK does not currently build python 3.8 arm64 wheels, so skip it too
