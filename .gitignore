@@ -11,6 +11,7 @@ wheelhouse
 .venv
 __pycache__
 *.egg-info
+dist
 
 # PyInstaller
 pyi
