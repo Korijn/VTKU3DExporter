@@ -8,20 +8,23 @@ import sys
 from skbuild import setup
 
 
+VTK_DEFAULT_WHEEL_SDK_VERSION = "9.2.5"
+
+
 vtk_module_source_dir = Path(__file__).parent.resolve()
 
 
-def auto_download_vtk_wheel_sdk():
-    # Automatically download the VTK wheel SDK based upon the current platform
-    # and python version.
-    # If the download location changes, we may need to change the logic here.
-    # Returns the path to the unpacked SDK.
+def vtk_wheel_sdk_version():
+    return os.getenv("VTK_WHEEL_SDK_VERSION", VTK_DEFAULT_WHEEL_SDK_VERSION)
 
-    base_url = "https://vtk.org/files/wheel-sdks/"
-    prefix = "vtk-wheel-sdk"
-    default_sdk_version = "9.2.5"
-    # The user can set the sdk version via an environment variable
-    sdk_version = os.getenv("VTK_WHEEL_SDK_VERSION", default_sdk_version)
+
+def vtk_wheel_sdk_name(sdk_version=None):
+    """Return the VTK wheel SDK name.
+    """
+
+    if sdk_version is None:
+        sdk_version = vtk_wheel_sdk_version()
+
     py_version_short = "".join(map(str, sys.version_info[:2]))
 
     py_version = f"cp{py_version_short}-cp{py_version_short}"
@@ -50,8 +53,24 @@ def auto_download_vtk_wheel_sdk():
             # It's an arm64 build
             platform_suffix = "macosx_11_0_arm64"
 
-    dir_name = f"{prefix}-{sdk_version}-{py_version}-{platform_suffix}"
-    default_install_path = Path(".").resolve() / f"_deps/{dir_name}"
+    prefix = "vtk-wheel-sdk"
+    wheel_sdk_name = f"{prefix}-{sdk_version}-{py_version}-{platform_suffix}"
+
+    return wheel_sdk_name
+
+
+def auto_download_vtk_wheel_sdk():
+    # Automatically download the VTK wheel SDK based upon the current platform
+    # and python version.
+    # If the download location changes, we may need to change the logic here.
+    # Returns the path to the unpacked SDK.
+
+    base_url = "https://vtk.org/files/wheel-sdks/"
+    prefix = "vtk-wheel-sdk"
+
+    wheel_sdk_name = vtk_wheel_sdk_name()
+
+    default_install_path = Path(".").resolve() / f"_deps/{wheel_sdk_name}"
     install_path = Path(os.getenv("VTK_WHEEL_SDK_INSTALL_PATH",
                                   default_install_path))
 
@@ -60,7 +79,7 @@ def auto_download_vtk_wheel_sdk():
         return install_path.as_posix()
 
     # Need to download it
-    full_name = f"{prefix}-{sdk_version}-{py_version}-{platform_suffix}.tar.xz"
+    full_name = f"{wheel_sdk_name}.tar.xz"
     url = f"{base_url}{full_name}"
 
     script_path = str(vtk_module_source_dir /
