@@ -11,7 +11,7 @@ endif()
 FetchContent_Populate(${proj}
   SOURCE_DIR     ${EP_SOURCE_DIR}
   GIT_REPOSITORY https://github.com/KitwareMedical/VTKExternalModule.git
-  GIT_TAG        c1906cf121e34b6391a91c2fffc448eca402a6cc
+  GIT_TAG        37ade3c2605fc32a7c3a639fd77073a41e7ad7a8
   QUIET
   )
 
