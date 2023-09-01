@@ -48,9 +48,6 @@ renderer.AddActor(cubeActor)
 # Automatically reset the camera
 renderer.ResetCamera()
 
-# Fix IFXCore library loading. See https://github.com/ClinicalGraphics/VTKU3DExporter/issues/13
-os.environ["U3D_LIBDIR"] = os.path.dirname(vtkU3DExporter.__file__)
-
 # Define the output file name, which will have the ".u3d" extension appended automatically
 filePath = "cube"
 

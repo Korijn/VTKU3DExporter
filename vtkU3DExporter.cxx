@@ -25,6 +25,7 @@
 #include "vtkProperty.h"
 #include "vtkRendererCollection.h"
 #include "vtkRenderWindow.h"
+#include "vtkResourceFileLocator.h"
 #include "vtkSmartPointer.h"
 #include "vtkTextActor.h"
 #include "vtkTextProperty.h"
@@ -34,6 +35,7 @@
 #include "vtkInformation.h"
 #include "vtkInformationStringKey.h"
 #include "vtkInformationIterator.h"
+#include "vtksys/SystemTools.hxx"
 
 #include <sstream>
 #include <cassert>
@@ -97,6 +99,32 @@ static bool vtkU3DExporterWriterUsingCellColors(vtkActor* anActor);
 
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkU3DExporter);
+
+//----------------------------------------------------------------------------
+void vtkU3DExporter::InitializeEnvironment()
+{
+    //
+    // Set U3D_LIBDIR env. variable expected by IFXOSLoader.cpp to ensure
+    // the IFXCore library can be loaded.
+    //
+    if (vtksys::SystemTools::GetEnv("U3D_LIBDIR") == nullptr)
+    {
+        std::string libPath = vtkGetLibraryPathForSymbol(PyInit_vtkU3DExporter);
+        if (libPath.empty())
+        {
+            vtkErrorMacro(
+                << "Failed to set U3D_LIBDIR env. variable: "
+                << "Could not get vtkU3DExporter python module location based on 'PyInit_vtkU3DExporter' symbol.");
+            return;
+        }
+        else
+        {
+            std::string u3dLibDir = vtksys::SystemTools::GetFilenamePath(libPath);
+            vtksys::SystemTools::PutEnv("U3D_LIBDIR=" + u3dLibDir);
+            vtkDebugMacro(<< "Setting env. variable U3D_LIBDIR to " << u3dLibDir);
+        }
+    }
+}
 
 //----------------------------------------------------------------------------
 vtkU3DExporter::vtkU3DExporter()
@@ -248,6 +276,8 @@ void CreateModelNode( vtkActor* anActor, const wchar_t* name, ModelNode& Model )
 //----------------------------------------------------------------------------
 void vtkU3DExporter::WriteData()
 {
+    this->InitializeEnvironment();
+
     vtkRenderer *ren;
     vtkActorCollection *ac;
     //  vtkActor2DCollection *a2Dc;

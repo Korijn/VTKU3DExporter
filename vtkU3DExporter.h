@@ -41,6 +41,19 @@ public:
     vtkGetStringMacro(FileName);
 
     // Description:
+    // Set the U3D_LIBDIR env. variable expected by the U3D IFXOSLoader
+    // to find and load the IFXCore library.
+    //
+    // If the U3D_LIBDIR env. variable is already set, this function is a no-op.
+    //
+    // Notes:
+    // * The directory is set based on the location of the vtkU3DExporter python
+    //   module.
+    //
+    // * This function is automatically called from vtkU3DExporter::WriteData()
+    void InitializeEnvironment();
+
+    // Description:
     // Specify if compression of meshes is enabled
     vtkSetClampMacro(MeshCompression, int, 0, 1);
     vtkBooleanMacro(MeshCompression, int);
