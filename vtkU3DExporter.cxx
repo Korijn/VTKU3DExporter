@@ -109,12 +109,18 @@ void vtkU3DExporter::InitializeEnvironment()
     //
     if (vtksys::SystemTools::GetEnv("U3D_LIBDIR") == nullptr)
     {
-        std::string libPath = vtkGetLibraryPathForSymbol(PyInit_vtkU3DExporter);
+#if defined(_WIN32) && !defined(__CYGWIN__)
+        std::string symbolName = "vtkU3DExporter::New";
+        std::string libPath = vtkResourceFileLocator::GetLibraryPathForSymbolWin32(vtkU3DExporter::New);
+#else
+        std::string symbolName = "PyInit_vtkU3DExporter";
+        std::string libPath = vtkResourceFileLocator::GetLibraryPathForSymbolUnix(symbolName.c_str());
+#endif
         if (libPath.empty())
         {
             vtkErrorMacro(
                 << "Failed to set U3D_LIBDIR env. variable: "
-                << "Could not get vtkU3DExporter python module location based on 'PyInit_vtkU3DExporter' symbol.");
+                << "Could not get vtkU3DExporter python module location based on '" << symbolName << "' symbol.");
             return;
         }
         else
