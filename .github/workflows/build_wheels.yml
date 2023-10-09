@@ -80,7 +80,7 @@ jobs:
         run: bash .github/scripts/install.sh
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@f21bb8376a051ffb6cb5604b28ccaef7b90e8ab7 # v2.14.1
+        uses: pypa/cibuildwheel@fff9ec32ed25a9c576750c91e06b410ed0c15db7 # v2.16.2
         with:
           output-dir: wheelhouse
 
