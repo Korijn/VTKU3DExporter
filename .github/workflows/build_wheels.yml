@@ -96,7 +96,7 @@ jobs:
           name: wheel-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
-  debug job:
+  debug_job:
     needs: build_wheels
     name: Debug job
     runs-on: ubuntu-latest
