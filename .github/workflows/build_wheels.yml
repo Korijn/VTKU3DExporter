@@ -86,13 +86,14 @@ jobs:
 
       - name: Upload skbuild if an error occurred (for debugging)
         if: ${{ failure() }}
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
+        uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
         with:
-          name: skbuild
+          name: skbuild-${{ matrix.os }}
           path: ${{ github.workspace }}/_skbuild
 
-      - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
+      - uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
         with:
+          name: wheel-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
   upload_pypi:
@@ -107,7 +108,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@7a1cd3216ca9260cd8022db641d960b1db4d1be4 # v4.0.0
         with:
-          name: artifact
           path: dist
+
+      - name: Flatten artifact folder structure
+        run: mv -v dist/*/* dist/.
 
       - uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf # v1.8.11
