@@ -96,17 +96,6 @@ jobs:
           name: wheel-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
-  debug_job:
-    needs: build_wheels
-    name: Debug job
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@7a1cd3216ca9260cd8022db641d960b1db4d1be4 # v4.0.0
-        with:
-          path: dist
-      - name: List dist folder
-        run: ls -R dist
-
   upload_pypi:
     needs: build_wheels
     name: Upload wheels to PyPI
@@ -120,5 +109,8 @@ jobs:
       - uses: actions/download-artifact@7a1cd3216ca9260cd8022db641d960b1db4d1be4 # v4.0.0
         with:
           path: dist
+
+      - name: Flatten artifact folder structure
+        run: mv -v dist/*/* dist/.
 
       - uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf # v1.8.11
