@@ -113,4 +113,4 @@ jobs:
       - name: Flatten artifact folder structure
         run: mv -v dist/*/* dist/.
 
-      - uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
+      - uses: pypa/gh-action-pypi-publish@897895f1e160c830e369f9779632ebc134688e1b # v1.10.2
